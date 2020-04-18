@@ -9,21 +9,23 @@ import carcassonne.model.tile.TileType;
 
 /**
  * The playing grid class.
+ * 
  * @author Timur Saglam
  */
 public class Grid {
     private static final TileType FOUNDATION_TYPE = TileType.CastleWallRoad;
     private final int width;
     private final int height;
-    private final GridSpot[][] spots;
+    private GridSpot[][] spots;
     private GridSpot foundation;
 
     /**
      * Basic constructor
-     * @param width is the grid width.
+     * 
+     * @param width  is the grid width.
      * @param height is the grid height.
      */
-    public Grid(int width, int height) {
+    public Grid(final int width, final int height) {
         this.width = width;
         this.height = height;
         spots = new GridSpot[width][height];
@@ -35,8 +37,49 @@ public class Grid {
         placeFoundation(FOUNDATION_TYPE);
     }
 
+    public Grid copy(final int newWidth, final int newHeight) {
+        final int diffX = newWidth - width;
+        final int diffY = newHeight - height;
+        if (diffX < 0 || diffY < 0) {
+            throw new IllegalArgumentException("Invalid size: Can only copy into bigger grid");
+        }
+        if (diffX % 2 != 0 || diffY % 2 != 0) {
+            throw new IllegalArgumentException("Grid must grow evenly");
+        }
+        final int offsetX = diffX / 2;
+        final int offsetY = diffY / 2;
+        final GridSpot[][] newSpots = new GridSpot[newWidth][newHeight];
+        final Grid newGrid = new Grid(newWidth, newHeight, null);
+        for (int y = 0; y < newHeight; y++) {
+            for (int x = 0; x < newWidth; x++) {
+                final int xOld = x - offsetX;
+                final int yOld = y - offsetY;
+                if (xOld < 0 || xOld >= width || yOld < 0 || yOld >= height) {
+                    newSpots[x][y] = new GridSpot(this, x, y);
+                } else {
+                    assert (spots[x - offsetX][y - offsetY] != null);
+                    final GridSpot oldSpot = spots[x - offsetX][y - offsetY];
+                    final GridSpot newSpot = new GridSpot(newGrid, x, y);
+                    if (oldSpot.getTile() != null) {
+                        newSpot.forcePlacement(oldSpot.getTile());
+                    }
+                    newSpots[x][y] = newSpot;
+                }
+            }
+        }
+        newGrid.spots = newSpots;
+        return newGrid;
+    }
+
+    private Grid(int width, int height, final GridSpot[][] spots) {
+        this.width = width;
+        this.height = height;
+        this.spots = spots;
+    }
+
     /**
      * Returns list of all patterns on the grid.
+     * 
      * @return the list of patterns.
      */
     public List<GridPattern> getAllPatterns() {
@@ -55,7 +98,9 @@ public class Grid {
     }
 
     /**
-     * Creates a list of spots that are connected to a specific spot with the terrain in a specific direction on the spot.
+     * Creates a list of spots that are connected to a specific spot with the
+     * terrain in a specific direction on the spot.
+     * 
      * @param spot is the spot on the grid where the tile is.
      * @param from is the direction the tile is connected from
      * @return the list of connected tiles.
@@ -73,6 +118,7 @@ public class Grid {
 
     /**
      * Returns the spot of the first tile of round, the foundation tile.
+     * 
      * @return the grid spot.
      */
     public GridSpot getFoundation() {
@@ -81,6 +127,7 @@ public class Grid {
 
     /**
      * Getter for the grid height.
+     * 
      * @return the height
      */
     public int getHeight() {
@@ -88,7 +135,9 @@ public class Grid {
     }
 
     /**
-     * Method checks for modified patterns on the grid. As a basis it uses the coordinates of the last placed tile.
+     * Method checks for modified patterns on the grid. As a basis it uses the
+     * coordinates of the last placed tile.
+     * 
      * @param spot is the spot of the last placed tile.
      * @return the list of the modified patterns.
      */
@@ -105,8 +154,11 @@ public class Grid {
     }
 
     /**
-     * Returns the neighbor of a specific {@link GridSpot} in a specific direction or null of there is none.
-     * @param spot is the {@link GridSpot} from which the neighbor is requested.
+     * Returns the neighbor of a specific {@link GridSpot} in a specific direction
+     * or null of there is none.
+     * 
+     * @param spot      is the {@link GridSpot} from which the neighbor is
+     *                  requested.
      * @param direction is the {@link GridDirection} where the neighbor is.
      * @return the neighboring {@link GridSpot} or null if there is no tile placed.
      */
@@ -120,11 +172,14 @@ public class Grid {
     }
 
     /**
-     * Returns a list of neighbors of a specific {@link GridSpot} in specific directions.
-     * @param spot is the specific {@link GridSpot}.
+     * Returns a list of neighbors of a specific {@link GridSpot} in specific
+     * directions.
+     * 
+     * @param spot            is the specific {@link GridSpot}.
      * @param allowEmptySpots determines whether empty spots are included or not.
-     * @param directions determines the directions where we check for neighbors. If no directions are given, the default
-     * {@link GridDirection#neighbors()} is used.
+     * @param directions      determines the directions where we check for
+     *                        neighbors. If no directions are given, the default
+     *                        {@link GridDirection#neighbors()} is used.
      * @return the list of any neighboring {@link GridSpot}.
      */
     public List<GridSpot> getNeighbors(GridSpot spot, boolean allowEmptySpots, GridDirection... directions) {
@@ -142,6 +197,7 @@ public class Grid {
 
     /**
      * Safe getter for tiles.
+     * 
      * @param x is the x coordinate
      * @param y is the y coordinate
      * @return the spot
@@ -154,6 +210,7 @@ public class Grid {
 
     /**
      * Getter for the grid width.
+     * 
      * @return the width
      */
     public int getWidth() {
@@ -161,8 +218,10 @@ public class Grid {
     }
 
     /**
-     * Checks whether a spot on the grid would close free spots off in a direction if a tile would be placed there.
-     * @param spot is the spot.
+     * Checks whether a spot on the grid would close free spots off in a direction
+     * if a tile would be placed there.
+     * 
+     * @param spot      is the spot.
      * @param direction is the direction.
      * @return true if it does.
      */
@@ -174,6 +233,7 @@ public class Grid {
 
     /**
      * Checks whether the grid is full.
+     * 
      * @return true if full.
      */
     public boolean isFull() {
@@ -189,6 +249,7 @@ public class Grid {
 
     /**
      * Checks whether a specific spot on the grid is valid.
+     * 
      * @param spot is the spot
      * @return true if it is on the grid.
      */
@@ -198,6 +259,7 @@ public class Grid {
 
     /**
      * Checks whether specific coordinates are on the grid.
+     * 
      * @param x is the x coordinate
      * @param y is the y coordinate
      * @return true if it is on the grid.
@@ -208,8 +270,9 @@ public class Grid {
 
     /**
      * Tries to place a tile on a spot on the grid.
-     * @param x is the x coordinate
-     * @param y is the y coordinate
+     * 
+     * @param x    is the x coordinate
+     * @param y    is the y coordinate
      * @param tile is the tile to place
      * @return true if it was successful, false if spot is occupied.
      */
@@ -217,6 +280,46 @@ public class Grid {
         checkParameters(x, y);
         checkParameters(tile);
         return spots[x][y].set(tile);
+    }
+
+    public boolean needsResize() {
+        final Pair<CoordinatePair, CoordinatePair> effectiveSize = getEffectiveSize();
+        final Pair<CoordinatePair, CoordinatePair> actualSize = getSize();
+        return CoordinatePair.minDistance(actualSize.getLeft(), effectiveSize.getLeft()) < 2
+                || CoordinatePair.minDistance(actualSize.getRight(), effectiveSize.getRight()) < 3;
+    }
+
+    public static CoordinatePair getOffsetForCentering(final Pair<CoordinatePair, CoordinatePair> container,
+            final Pair<CoordinatePair, CoordinatePair> child) {
+        final int diffXLeft = container.getLeft().getX() - child.getLeft().getX();
+        final int diffYTop = container.getLeft().getY() - child.getLeft().getY();
+        final int diffXRight = container.getRight().getX() - child.getRight().getX();
+        final int diffYBot = container.getRight().getY() - child.getRight().getY();
+        final int horizontalDiff = diffXLeft + diffXRight;
+        final int verticalDiff = diffYTop + diffYBot;
+        return CoordinatePair.of(horizontalDiff / 2, verticalDiff / 2);
+    }
+
+    public Pair<CoordinatePair, CoordinatePair> getSize() {
+        return Pair.of(CoordinatePair.of(0, 0), CoordinatePair.of(width, height));
+    }
+
+    public Pair<CoordinatePair, CoordinatePair> getEffectiveSize() {
+        int minY = Integer.MAX_VALUE;
+        int maxY = 0;
+        int minX = Integer.MAX_VALUE;
+        int maxX = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (spots[x][y].isOccupied()) {
+                    minX = Integer.min(minX, x);
+                    maxX = Integer.max(maxX, x);
+                    minY = Integer.min(minY, y);
+                    maxY = Integer.max(maxY, y);
+                }
+            }
+        }
+        return Pair.of(CoordinatePair.of(minX, minY), CoordinatePair.of(maxX, maxY));
     }
 
     private void checkParameters(GridSpot spot) {
@@ -228,8 +331,9 @@ public class Grid {
     }
 
     /**
-     * Error checker method for other methods in this class. It just checks whether specific coordinates are on the grid and
-     * throws an error if not.
+     * Error checker method for other methods in this class. It just checks whether
+     * specific coordinates are on the grid and throws an error if not.
+     * 
      * @param x is the x coordinate
      * @param y is the y coordinate
      */
@@ -240,7 +344,9 @@ public class Grid {
     }
 
     /**
-     * Error checker method for other methods in this class. It just checks whether specific tile is not null.
+     * Error checker method for other methods in this class. It just checks whether
+     * specific tile is not null.
+     * 
      * @param tile the tile to check
      */
     private void checkParameters(Tile tile) {
@@ -274,6 +380,7 @@ public class Grid {
 
     /**
      * Places a specific tile in the middle of the grid.
+     * 
      * @param tileType is the type of that specific tile.
      */
     private void placeFoundation(TileType tileType) {
@@ -281,6 +388,29 @@ public class Grid {
         int centerY = Math.round((height - 1) / 2);
         foundation = spots[centerX][centerY];
         foundation.forcePlacement(new Tile(tileType));
+    }
+
+    public void move(CoordinatePair move) {
+        // TODO Summerdave: Use Effective Grid to determine if move is legal.
+        final GridSpot[][] newSpots = new GridSpot[width][height];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                final int xOld = x - move.getX(); // Inverse to determine old position
+                final int yOld = y - move.getY();
+                final GridSpot newSpot;
+                if (xOld < 0 || xOld >= width || yOld < 0 || yOld >= height) {
+                    newSpot = new GridSpot(this, x, y);
+                } else {
+                    newSpot = new GridSpot(this, x, y);
+                    final GridSpot oldSpot = spots[xOld][yOld];
+                    if (oldSpot.getTile() != null) {
+                        newSpot.forcePlacement(oldSpot.getTile());
+                    }
+                }
+                newSpots[x][y] = newSpot;
+            }
+        }
+        this.spots = newSpots;
     }
 
 }

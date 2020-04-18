@@ -11,9 +11,11 @@ import carcassonne.model.Player;
 import carcassonne.model.terrain.TerrainType;
 
 /**
- * A pattern of connected terrain on tiles of the grid. A grid pattern contains information about the tiles of the
- * pattern and the players involved in the pattern. Also it counts the amount of meeples per player on the tiles of the
+ * A pattern of connected terrain on tiles of the grid. A grid pattern contains
+ * information about the tiles of the pattern and the players involved in the
+ * pattern. Also it counts the amount of meeples per player on the tiles of the
  * pattern.
+ * 
  * @author Timur Saglam
  */
 public abstract class GridPattern {
@@ -28,7 +30,8 @@ public abstract class GridPattern {
 
     /**
      * Basic constructor taking only a tile type.
-     * @param patternType is the type of the pattern.
+     * 
+     * @param patternType     is the type of the pattern.
      * @param scoreMultiplier is the score multiplier of the pattern.
      */
     protected GridPattern(TerrainType patternType, int scoreMultiplier) {
@@ -41,6 +44,7 @@ public abstract class GridPattern {
 
     /**
      * Checks whether the pattern already contains a grid spot.
+     * 
      * @param spot is the grid spot to check.
      * @return true if the pattern already contains the grid spot.
      */
@@ -49,8 +53,9 @@ public abstract class GridPattern {
     }
 
     /**
-     * Disburses complete patterns. Gives every involved player points if he is one of the players with the maximal amount
-     * of meeples on the pattern. Removes the meeple placement and returns them to the players. Can only be called once in
+     * Disburses complete patterns. Gives every involved player points if he is one
+     * of the players with the maximal amount of meeples on the pattern. Removes the
+     * meeple placement and returns them to the players. Can only be called once in
      * the lifetime of a GridPttern object.
      */
     public void disburse() {
@@ -65,15 +70,15 @@ public abstract class GridPattern {
                 player.addScore((int) Math.ceil(baseValue / involvedPlayers.size()), patternType);
             }
             for (Meeple meeple : meepleList) {
-                meeple.removePlacement(); // remove meeples from tiles.
+                meeple.getLocation().removeMeeple(); // remove meeples from tiles.
             }
             disbursed = true;
         }
     }
 
     /**
-     * Disburses pattern if it is incomplete. This should be used at the end of the round and does not disburse complete
-     * patterns.
+     * Disburses pattern if it is incomplete. This should be used at the end of the
+     * round and does not disburse complete patterns.
      */
     public void forceDisburse() {
         if (!complete) {
@@ -84,6 +89,7 @@ public abstract class GridPattern {
 
     /**
      * Getter for the meeple list.
+     * 
      * @return the meeple list.
      */
     public List<Meeple> getMeepleList() {
@@ -91,7 +97,9 @@ public abstract class GridPattern {
     }
 
     /**
-     * Returns the current size of the pattern, which equals the amount of added tiles.
+     * Returns the current size of the pattern, which equals the amount of added
+     * tiles.
+     * 
      * @return the size.
      */
     public int getSize() {
@@ -100,6 +108,7 @@ public abstract class GridPattern {
 
     /**
      * Checks whether the pattern is complete or not. That means there cannot be
+     * 
      * @return true if complete.
      */
     public boolean isComplete() {
@@ -108,6 +117,7 @@ public abstract class GridPattern {
 
     /**
      * Checks whether no player has set a meeple on the pattern.
+     * 
      * @return true if the pattern is not occupied, false if not.
      */
     public boolean isNotOccupied() {
@@ -115,10 +125,12 @@ public abstract class GridPattern {
     }
 
     /**
-     * Checks whether a specific player is involved in the occupation of the pattern. That means he has at least one meeple
-     * on the pattern.
+     * Checks whether a specific player is involved in the occupation of the
+     * pattern. That means he has at least one meeple on the pattern.
+     * 
      * @param player is the specific player.
-     * @return true if he is involved in the occupation of the pattern, false if not.
+     * @return true if he is involved in the occupation of the pattern, false if
+     *         not.
      */
     public boolean isOccupiedBy(Player player) {
         return involvedPlayers.containsKey(player);
@@ -134,7 +146,8 @@ public abstract class GridPattern {
     }
 
     /**
-     * Removes all tags of all tiles of the pattern. Needs to be called after ALL patterns of a tile have been created.
+     * Removes all tags of all tiles of the pattern. Needs to be called after ALL
+     * patterns of a tile have been created.
      */
     public void removeTileTags() {
         for (GridSpot spot : containedSpots) {
@@ -144,10 +157,12 @@ public abstract class GridPattern {
 
     @Override
     public String toString() {
-        return "GridPattern[type: " + patternType + ", size: " + getSize() + ", complete: " + complete + ", meeples: " + meepleList;
+        return "GridPattern[type: " + patternType + ", size: " + getSize() + ", complete: " + complete + ", meeples: "
+                + meepleList;
     }
 
-    // adds meeple from tile to involvedPlayers map if the meeple is involved in the pattern.
+    // adds meeple from tile to involvedPlayers map if the meeple is involved in the
+    // pattern.
     private void addMeepleFrom(GridSpot spot) {
         Meeple meeple = spot.getTile().getMeeple(); // Meeple on the tile.
         if (!meepleList.contains(meeple) && isPartOfPattern(spot, meeple.getPosition())) {
@@ -162,7 +177,8 @@ public abstract class GridPattern {
     }
 
     /**
-     * Removes all players from the list of involved players which have not the maximum amount of meeples on this pattern.
+     * Removes all players from the list of involved players which have not the
+     * maximum amount of meeples on this pattern.
      */
     private void determineDominantPlayers() {
         List<Player> removalList = new LinkedList<>();
@@ -184,7 +200,9 @@ public abstract class GridPattern {
     }
 
     /**
-     * Adds a spot to the pattern, saving the tile on the spot, the owner of a potential Meeple on the tile.
+     * Adds a spot to the pattern, saving the tile on the spot, the owner of a
+     * potential Meeple on the tile.
+     * 
      * @param spot is the spot to add.
      */
     protected void add(GridSpot spot) {
@@ -196,9 +214,10 @@ public abstract class GridPattern {
 
     /**
      * Checks the usual inputs on being null.
-     * @param spot is any grid spot.
+     * 
+     * @param spot      is any grid spot.
      * @param direction is any grid direction.
-     * @param grid is any grid.
+     * @param grid      is any grid.
      */
     protected void checkArgs(GridSpot spot, GridDirection direction, Grid grid) {
         if (spot == null || direction == null || grid == null) {

@@ -11,22 +11,27 @@ import carcassonne.view.tertiary.GameStatisticsGUI;
 
 /**
  * The specific state where the statistics are shown can be placed.
+ * 
  * @author Timur Saglam
  */
 public class StateGameOver extends AbstractControllerState {
 
     private GameStatisticsGUI gameStatistics;
+    private MainGUI mainGUI;
 
     /**
      * Constructor of the state.
-     * @param controller sets the Controller
-     * @param mainGUI sets the MainGUI
-     * @param rotationGUI sets the RotationGUI
+     * 
+     * @param controller   sets the Controller
+     * @param mainGUI      sets the MainGUI
+     * @param rotationGUI  sets the RotationGUI
      * @param placementGUI sets the PlacementGUI
-     * @param scoreboard sets the Scoreboard
+     * @param scoreboard   sets the Scoreboard
      */
-    public StateGameOver(MainController controller, MainGUI mainGUI, RotationGUI rotationGUI, PlacementGUI placementGUI) {
-        super(controller, mainGUI, rotationGUI, placementGUI);
+    public StateGameOver(MainController controller, RotationGUI rotationGUI, PlacementGUI placementGUI,
+            MainGUI mainGUI) {
+        super(controller, rotationGUI, placementGUI, mainGUI);
+        this.mainGUI = mainGUI;
     }
 
     /**
@@ -67,8 +72,8 @@ public class StateGameOver extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public void placeTile(int x, int y) {
-        // do nothing.
+    public boolean placeTile(int x, int y) {
+        return false;
     }
 
     /**
@@ -96,7 +101,7 @@ public class StateGameOver extends AbstractControllerState {
         mainGUI.resetMenuState();
         GameMessage.showMessage("The game is over. Winning player(s): " + round.getWinningPlayers());
         gameStatistics = new GameStatisticsGUI(controller, round);
-        mainGUI.addSubInterfaces(gameStatistics, placementGUI, rotationGUI);
+        // mainGUI.addSubInterfaces(gameStatistics, placementGUI, rotationGUI);
     }
 
     /**

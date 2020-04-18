@@ -16,20 +16,23 @@ import carcassonne.view.secondary.RotationGUI;
 
 /**
  * The specific state when a Meeple can be placed.
+ * 
  * @author Timur Saglam
  */
 public class StateManning extends AbstractControllerState {
 
     /**
      * Constructor of the state.
-     * @param controller sets the controller.
-     * @param mainGUI sets the MainGUI
-     * @param rotationGUI sets the RotationGUI
+     * 
+     * @param controller   sets the controller.
+     * @param boadGUI      sets the MainGUI
+     * @param rotationGUI  sets the RotationGUI
      * @param placementGUI sets the PlacementGUI
-     * @param scoreboard sets the Scoreboard
+     * @param scoreboard   sets the Scoreboard
      */
-    public StateManning(MainController controller, MainGUI mainGUI, RotationGUI rotationGUI, PlacementGUI placementGUI) {
-        super(controller, mainGUI, rotationGUI, placementGUI);
+    public StateManning(MainController controller, RotationGUI rotationGUI, PlacementGUI placementGUI,
+            MainGUI mainGUI) {
+        super(controller, rotationGUI, placementGUI, mainGUI);
     }
 
     /**
@@ -83,9 +86,9 @@ public class StateManning extends AbstractControllerState {
         Tile tile = round.getCurrentTile();
         Player player = round.getActivePlayer();
         if (player.hasFreeMeeples() && isPlaceable(position)) {
-            mainGUI.resetMeeplePreview(tile);
+            mainGUI.getBoard().resetMeeplePreview(tile);
             tile.placeMeeple(player, position);
-            mainGUI.setMeeple(tile, position, player);
+            mainGUI.getBoard().setMeeple(tile, position, player);
             updateScores();
             processGridPatterns();
             startNextTurn();
@@ -98,8 +101,8 @@ public class StateManning extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public void placeTile(int x, int y) {
-        // do nothing.
+    public boolean placeTile(int x, int y) {
+        return false;
     }
 
     /**
@@ -107,7 +110,7 @@ public class StateManning extends AbstractControllerState {
      */
     @Override
     public void skip() {
-        mainGUI.resetMeeplePreview(round.getCurrentTile());
+        mainGUI.getBoard().resetMeeplePreview(round.getCurrentTile());
         processGridPatterns();
         startNextTurn();
     }
@@ -118,7 +121,7 @@ public class StateManning extends AbstractControllerState {
         for (GridPattern pattern : grid.getModifiedPatterns(tile.getGridSpot())) {
             if (pattern.isComplete()) {
                 for (Meeple meeple : pattern.getMeepleList()) {
-                    mainGUI.removeMeeple(meeple);
+                    mainGUI.getBoard().removeMeeple(meeple);
                 }
                 pattern.disburse();
                 updateScores();
@@ -132,7 +135,7 @@ public class StateManning extends AbstractControllerState {
             changeState(StateGameOver.class);
         } else {
             round.nextTurn();
-            mainGUI.setCurrentPlayer(round.getActivePlayer());
+            mainGUI.getBoard().setCurrentPlayer(round.getActivePlayer());
             changeState(StatePlacing.class);
         }
     }
@@ -143,10 +146,11 @@ public class StateManning extends AbstractControllerState {
     @Override
     protected void entry() {
         if (round.getActivePlayer().hasFreeMeeples()) {
-            mainGUI.setMeeplePreview(round.getCurrentTile(), round.getActivePlayer());
+            mainGUI.getBoard().setMeeplePreview(round.getCurrentTile(), round.getActivePlayer());
             placementGUI.setTile(round.getCurrentTile(), round.getActivePlayer());
         } else {
-            GameMessage.showMessage("You have no Meeples left. Regain Meeples by completing patterns to place Meepeles again.");
+            GameMessage.showMessage(
+                    "You have no Meeples left. Regain Meeples by completing patterns to place Meepeles again.");
             processGridPatterns();
             startNextTurn();
         }

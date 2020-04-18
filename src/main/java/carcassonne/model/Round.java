@@ -17,7 +17,7 @@ public class Round {
 
     private int activePlayerIndex;
     private Tile currentTile;
-    private final Grid grid;
+    private Grid grid;
     private Player[] players;
     private final int playerCount;
     private final TileStack tileStack;
@@ -118,6 +118,10 @@ public class Round {
     public void nextTurn() {
         activePlayerIndex = ++activePlayerIndex % players.length;
         currentTile = tileStack.drawTile();
+    }
+    
+    public void setGrid(final Grid grid) {
+        this.grid = grid;
     }
 
     /**

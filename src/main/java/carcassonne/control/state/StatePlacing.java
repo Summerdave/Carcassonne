@@ -11,20 +11,23 @@ import carcassonne.view.secondary.RotationGUI;
 
 /**
  * The specific state when a Tile can be placed.
+ * 
  * @author Timur Saglam
  */
 public class StatePlacing extends AbstractControllerState {
 
     /**
      * Constructor of the state.
-     * @param controller sets the controller.
-     * @param mainGUI sets the MainGUI
-     * @param rotationGUI sets the RotationGUI
+     * 
+     * @param controller   sets the controller.
+     * @param boardGUI     sets the MainGUI
+     * @param rotationGUI  sets the RotationGUI
      * @param placementGUI sets the PlacementGUI
-     * @param scoreboard sets the Scoreboard
+     * @param scoreboard   sets the Scoreboard
      */
-    public StatePlacing(MainController controller, MainGUI mainGUI, RotationGUI rotationGUI, PlacementGUI placementGUI) {
-        super(controller, mainGUI, rotationGUI, placementGUI);
+    public StatePlacing(MainController controller, RotationGUI rotationGUI, PlacementGUI placementGUI,
+            MainGUI mainGUI) {
+        super(controller, rotationGUI, placementGUI, mainGUI);
     }
 
     /**
@@ -64,14 +67,17 @@ public class StatePlacing extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public void placeTile(int x, int y) {
+    public boolean placeTile(int x, int y) {
         Tile tile = round.getCurrentTile();
         if (grid.place(x, y, tile)) {
-            mainGUI.setTile(tile, x, y);
+            mainGUI.getBoard().setTile(tile, x, y);
             GridSpot spot = grid.getSpot(x, y);
             highlightSurroundings(spot);
             changeState(StateManning.class);
+            controller.alignGrid();
+            return true;
         }
+        return false;
     }
 
     /**
@@ -84,7 +90,7 @@ public class StatePlacing extends AbstractControllerState {
         } else {
             round.skipCurrentTile();
             round.nextTurn();
-            mainGUI.setCurrentPlayer(round.getActivePlayer());
+            mainGUI.getBoard().setCurrentPlayer(round.getActivePlayer());
             entry();
         }
     }

@@ -9,20 +9,23 @@ import carcassonne.view.secondary.RotationGUI;
 
 /**
  * The specific state if no game is running.
+ * 
  * @author Timur Saglam
  */
 public class StateIdle extends AbstractControllerState {
 
     /**
      * Constructor of the state.
-     * @param controller sets the Controller
-     * @param mainGUI sets the MainGUI
-     * @param rotationGUI sets the RotationGUI
+     * 
+     * @param controller   sets the Controller
+     * @param boardGUI     sets the MainGUI
+     * @param rotationGUI  sets the RotationGUI
      * @param placementGUI sets the PlacementGUI
-     * @param scoreboard sets the Scoreboard
+     * @param scoreboard   sets the Scoreboard
      */
-    public StateIdle(MainController controller, MainGUI mainGUI, RotationGUI rotationGUI, PlacementGUI placementGUI) {
-        super(controller, mainGUI, rotationGUI, placementGUI);
+    public StateIdle(MainController controller, RotationGUI rotationGUI, PlacementGUI placementGUI,
+            final MainGUI mainGUI) {
+        super(controller, rotationGUI, placementGUI, mainGUI);
     }
 
     /**
@@ -61,8 +64,8 @@ public class StateIdle extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public void placeTile(int x, int y) {
-        // do nothing.
+    public boolean placeTile(int x, int y) {
+        return false;
     }
 
     /**
@@ -78,7 +81,7 @@ public class StateIdle extends AbstractControllerState {
      */
     @Override
     protected void entry() {
-        mainGUI.rebuildGrids();
+        mainGUI.getBoard().rebuildGrids();
     }
 
     /**

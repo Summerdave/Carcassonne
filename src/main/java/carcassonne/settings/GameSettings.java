@@ -10,19 +10,22 @@ import carcassonne.model.terrain.TerrainType;
 
 /**
  * Class for the management of the Carcassonne game settings.
+ * 
  * @author Timur Saglam
  */
 public class GameSettings {
     public static final int MAXIMAL_PLAYERS = 5;
-    public static final int TILE_SIZE = 100;
+    public static final int TILE_SIZE = 50;
+    public static final int BOARD_WIDTH = 15;
+    public static final int BOARD_HEIGHT = 14;
     public static final String TILE_FILE_TYPE = ".png";
     public static final String HIGHLIGHT_PATH = "src/main/ressources/highlight.png";
     public static final String NULL_TILE_PATH = "src/main/ressources/tiles/Null0.png";
     public static final String EMBLEM_PATH = "src/main/ressources/emblem.png";
     public static final String TILE_FOLDER_PATH = "src/main/ressources/tiles/";
-    
-    private static final PlayerColor[] DEFAULT_COLORS = { new PlayerColor(30, 26, 197), new PlayerColor(151, 4, 12), new PlayerColor(14, 119, 25),
-            new PlayerColor(216, 124, 0), new PlayerColor(96, 0, 147) };
+
+    private static final PlayerColor[] DEFAULT_COLORS = { new PlayerColor(30, 26, 197), new PlayerColor(151, 4, 12),
+            new PlayerColor(14, 119, 25), new PlayerColor(216, 124, 0), new PlayerColor(96, 0, 147) };
     private static final String[] DEFAULT_NAMES = { "ONE", "TWO", "THREE", "FOUR", "FIVE" };
     private static final String EMPTY = "";
     private static final String MEEPLE_PATH = "src/main/ressources/meeple/meeple_";
@@ -37,7 +40,8 @@ public class GameSettings {
     private final ArrayList<String> names;
 
     /**
-     * Creates a settings instance. Instances hold different setting values when one is changed.
+     * Creates a settings instance. Instances hold different setting values when one
+     * is changed.
      */
     public GameSettings() {
         colors = new ArrayList<>(Arrays.asList(DEFAULT_COLORS));
@@ -48,6 +52,7 @@ public class GameSettings {
 
     /**
      * Returns how many player are playing in the next round.
+     * 
      * @return the amount of players.
      */
     public int getAmountOfPlayers() {
@@ -56,6 +61,7 @@ public class GameSettings {
 
     /**
      * Returns the {@link PlayerColor} of a specific {@link Player}.
+     * 
      * @param playerNumber is the number of the {@link Player}.
      * @return the {@link PlayerColor}.
      */
@@ -65,6 +71,7 @@ public class GameSettings {
 
     /**
      * Returns the name of a specific {@link Player}.
+     * 
      * @param playerNumber is the number of the {@link Player}.
      * @return the name.
      */
@@ -74,6 +81,7 @@ public class GameSettings {
 
     /**
      * Checks whether chaos mode is enabled.
+     * 
      * @return true if it is enabled.
      */
     public boolean isChaosMode() {
@@ -82,6 +90,7 @@ public class GameSettings {
 
     /**
      * Specifies how many player are playing in the next round.
+     * 
      * @param amountOfPlayers is the amount of players.
      */
     public void setAmountOfPlayers(int amountOfPlayers) {
@@ -90,6 +99,7 @@ public class GameSettings {
 
     /**
      * Sets the chaos mode setting.
+     * 
      * @param chaosMode specifies whether chaos mode is active or not.
      */
     public void setChaosMode(boolean chaosMode) {
@@ -98,7 +108,8 @@ public class GameSettings {
 
     /**
      * Changes the {@link PlayerColor} of a specific {@link Player}.
-     * @param color is the new base {@link Color}.
+     * 
+     * @param color        is the new base {@link Color}.
      * @param playerNumber is the number of the {@link Player}.
      */
     public void setPlayerColor(Color color, int playerNumber) {
@@ -108,7 +119,8 @@ public class GameSettings {
 
     /**
      * Changes the name of a specific {@link Player}.
-     * @param name is the new name.
+     * 
+     * @param name         is the new name.
      * @param playerNumber is the number of the {@link Player}.
      */
     public void setPlayerName(String name, int playerNumber) {
@@ -118,6 +130,7 @@ public class GameSettings {
 
     /**
      * Registers a UI element that wants to listen to changes.
+     * 
      * @param notifiable is the UI element.
      */
     public void registerNotifiable(Notifiable notifiable) {
@@ -132,7 +145,8 @@ public class GameSettings {
 
     /**
      * Builds the path to the image of a specific meeple type.
-     * @param type is the type of terrain the meeple occupies.
+     * 
+     * @param type       is the type of terrain the meeple occupies.
      * @param isTemplate specifies whether the template image should be loaded.
      * @return the path as a String.
      */

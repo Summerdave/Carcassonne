@@ -3,23 +3,18 @@ package carcassonne.model.grid;
 import carcassonne.model.terrain.RotationDirection;
 
 /**
- * Enumeration for grid directions and tile positions. It is used either to specify a direction on the grid from a
- * specific tile, or to specify a position on a tile.
+ * Enumeration for grid directions and tile positions. It is used either to
+ * specify a direction on the grid from a specific tile, or to specify a
+ * position on a tile.
+ * 
  * @author Timur Saglam
  */
 public enum GridDirection {
-    TOP,
-    RIGHT,
-    BOTTOM,
-    LEFT,
-    TOP_RIGHT,
-    BOTTOM_RIGHT,
-    BOTTOM_LEFT,
-    TOP_LEFT,
-    MIDDLE;
+    TOP, RIGHT, BOTTOM, LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_LEFT, MIDDLE;
 
     /**
      * Adds a x coordinate and a <code> GridDirection</code>.
+     * 
      * @param coordinate is the x coordinate.
      * @return the sum as an x coordinate.
      */
@@ -35,6 +30,7 @@ public enum GridDirection {
 
     /**
      * Adds a y coordinate and a <code> GridDirection</code>.
+     * 
      * @param coordinate is the y coordinate.
      * @return the sum as an y coordinate.
      */
@@ -49,7 +45,9 @@ public enum GridDirection {
     }
 
     /**
-     * Checks whether the this grid direction is directly to the left of another grid direction.
+     * Checks whether the this grid direction is directly to the left of another
+     * grid direction.
+     * 
      * @param other is the other grid direction.
      * @return true if it is.
      */
@@ -58,7 +56,9 @@ public enum GridDirection {
     }
 
     /**
-     * Checks whether the this grid direction is directly to the right of another grid direction.
+     * Checks whether the this grid direction is directly to the right of another
+     * grid direction.
+     * 
      * @param other is the other grid direction.
      * @return true if it is.
      */
@@ -67,7 +67,9 @@ public enum GridDirection {
     }
 
     /**
-     * Checks whether the ordinal of a direction is smaller or equal than the ordinal of another direction.
+     * Checks whether the ordinal of a direction is smaller or equal than the
+     * ordinal of another direction.
+     * 
      * @param other is the other direction.
      * @return true if smaller or equal.
      */
@@ -77,6 +79,7 @@ public enum GridDirection {
 
     /**
      * Gets the next direction on the specified side of the current direction.
+     * 
      * @param side sets the side.
      * @return the next direction
      */
@@ -95,7 +98,9 @@ public enum GridDirection {
     }
 
     /**
-     * Calculates the opposite <code>GridDirection</code> for a specific <code>GridDirection</code>.
+     * Calculates the opposite <code>GridDirection</code> for a specific
+     * <code>GridDirection</code>.
+     * 
      * @return the opposite <code>GridDirection</code>.
      */
     public GridDirection opposite() {
@@ -108,7 +113,9 @@ public enum GridDirection {
     }
 
     /**
-     * Returns a lower case version of the grid direction with spaces instead of underscores.
+     * Returns a lower case version of the grid direction with spaces instead of
+     * underscores.
+     * 
      * @return the readable version.
      */
     public String toReadableString() {
@@ -125,6 +132,7 @@ public enum GridDirection {
 
     /**
      * Generates an array of the GridDirections for a direct neighbor on the grid.
+     * 
      * @return an array of TOP, RIGHT, BOTTOM and LEFT.
      */
     public static GridDirection[] directNeighbors() {
@@ -133,6 +141,7 @@ public enum GridDirection {
 
     /**
      * Generates an array of the GridDirections for a indirect neighbor on the grid.
+     * 
      * @return an array of TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT and TOP_LEFT.
      */
     public static GridDirection[] indirectNeighbors() {
@@ -141,6 +150,7 @@ public enum GridDirection {
 
     /**
      * Generates an array of the GridDirections for a neighbor on the grid.
+     * 
      * @return an array of all directions except MIDDLE.
      */
     public static GridDirection[] neighbors() {
@@ -149,6 +159,7 @@ public enum GridDirection {
 
     /**
      * Generates an array of the GridDirections for all positions on a tile.
+     * 
      * @return an array of an array of TOP, RIGHT, BOTTOM, LEFT and MIDDLE.
      */
     public static GridDirection[] tilePositions() {
@@ -156,11 +167,52 @@ public enum GridDirection {
     }
 
     /**
-     * Generates a two dimensional array of the GridDirections for their orientation on a tile.
-     * @return a 2D array of an array of TOP_LEFT, LEFT, BOTTOM_LEFT, TOP, MIDDLE, BOTTOM, TOP_RIGHT, RIGHT and
-     * BOTTOM_RIGHT.
+     * Generates a two dimensional array of the GridDirections for their orientation
+     * on a tile.
+     * 
+     * @return a 2D array of an array of TOP_LEFT, LEFT, BOTTOM_LEFT, TOP, MIDDLE,
+     *         BOTTOM, TOP_RIGHT, RIGHT and BOTTOM_RIGHT.
      */
     public static GridDirection[][] values2D() {
-        return new GridDirection[][] { { TOP_LEFT, LEFT, BOTTOM_LEFT }, { TOP, MIDDLE, BOTTOM }, { TOP_RIGHT, RIGHT, BOTTOM_RIGHT } };
+        return new GridDirection[][] { { TOP_LEFT, LEFT, BOTTOM_LEFT }, { TOP, MIDDLE, BOTTOM },
+                { TOP_RIGHT, RIGHT, BOTTOM_RIGHT } };
+    }
+
+    public static int xValue(GridDirection direction) {
+        switch (direction) {
+        case TOP_LEFT:
+        case LEFT:
+        case BOTTOM_LEFT:
+            return 0;
+        case TOP:
+        case MIDDLE:
+        case BOTTOM:
+            return 1;
+        case TOP_RIGHT:
+        case RIGHT:
+        case BOTTOM_RIGHT:
+            return 2;
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public static int yValue(GridDirection direction) {
+        switch (direction) {
+        case TOP_LEFT:
+        case TOP:
+        case TOP_RIGHT:
+            return 0;
+        case LEFT:
+        case MIDDLE:
+        case RIGHT:
+            return 1;
+        case BOTTOM_LEFT:
+        case BOTTOM:
+        case BOTTOM_RIGHT:
+            return 2;
+        default:
+            throw new IllegalArgumentException();
+        }
     }
 }

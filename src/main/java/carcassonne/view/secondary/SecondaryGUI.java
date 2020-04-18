@@ -91,5 +91,10 @@ public abstract class SecondaryGUI extends JDialog implements Notifiable {
      * to the tiles properties.
      */
     protected abstract void updateGUI();
+    
+    public void refresh() {
+        revalidate();
+        super.repaint();
+    }
 
 }
