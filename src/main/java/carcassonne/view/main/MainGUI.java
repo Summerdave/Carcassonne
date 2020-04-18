@@ -2,6 +2,7 @@ package carcassonne.view.main;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 
@@ -39,7 +40,7 @@ public class MainGUI extends JFrame {
         menuBar = new MainMenuBar(controller);
         setJMenuBar(menuBar);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout());
         add(board, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);

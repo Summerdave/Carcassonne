@@ -1,13 +1,13 @@
 package carcassonne.view.main;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.OverlayLayout;
@@ -45,7 +45,7 @@ public class TileLabel {
      * @param x            sets the x coordinate.
      * @param y            sets the y coordinate.
      */
-    public TileLabel(final MainController controller, final Component meepleOverlay, MeepleLabel[][] meepleLabels,
+    public TileLabel(final MainController controller, final JComponent meepleOverlay, MeepleLabel[][] meepleLabels,
             int x, int y, int width, int height) {
         label = new JLabel();
         this.width = width;
@@ -62,6 +62,8 @@ public class TileLabel {
         this.layeredPane = new JLayeredPane();
         layeredPane.setLayout(new OverlayLayout(layeredPane));
         layeredPane.setSize(width, height);
+        meepleOverlay.setAlignmentX(0.5f);
+        meepleOverlay.setAlignmentY(0.5f);
         layeredPane.add(meepleOverlay, Integer.valueOf(0), 0);
         label.setAlignmentX(0.5f);
         label.setAlignmentY(0.5f);

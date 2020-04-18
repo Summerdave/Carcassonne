@@ -15,9 +15,9 @@ import carcassonne.model.terrain.TerrainType;
  */
 public class GameSettings {
     public static final int MAXIMAL_PLAYERS = 5;
-    public static final int TILE_SIZE = 50;
-    public static final int BOARD_WIDTH = 15;
-    public static final int BOARD_HEIGHT = 14;
+    public static final int TILE_SIZE = 100;
+    public static final int BOARD_WIDTH = 12;
+    public static final int BOARD_HEIGHT = 8;
     public static final String TILE_FILE_TYPE = ".png";
     public static final String HIGHLIGHT_PATH = "src/main/ressources/highlight.png";
     public static final String NULL_TILE_PATH = "src/main/ressources/tiles/Null0.png";

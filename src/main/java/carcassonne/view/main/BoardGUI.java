@@ -52,7 +52,7 @@ public class BoardGUI extends JLayeredPane implements Notifiable {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.meepleLabels = new ArrayList<>();
-        setPreferredSize(new Dimension(gridWidth * tileSize, gridHeight * tileSize));
+        setSize(new Dimension(gridWidth * tileSize, gridHeight * tileSize));
         JPanel tilePanel = buildTilePanel();
         buildLayeredPane(tilePanel);
     }
