@@ -1,5 +1,6 @@
 package carcassonne.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,19 +10,23 @@ import carcassonne.settings.PlayerColor;
 
 /**
  * The class for the player objects. It manages the meeples and the score.
+ * 
  * @author Timur Saglam
  */
-public class Player {
+public class Player implements Serializable {
+
+    private static final long serialVersionUID = 7184990819024672525L;
     private static final int MAX_MEEPLES = 7;
     private int freeMeeples;
     private final int number;
     private int overallScore;
-    private Map<TerrainType, Integer> terrainSpecificScores;
-    private final GameSettings settings;
+    private transient Map<TerrainType, Integer> terrainSpecificScores;
+    private transient final GameSettings settings;
 
     /**
      * Simple constructor.
-     * @param number is the number of the player.
+     * 
+     * @param number   is the number of the player.
      * @param settings are the {@link GameSettings}.
      */
     public Player(int number, GameSettings settings) {
@@ -33,7 +38,8 @@ public class Player {
 
     /**
      * Adds score to the players score value and keeps track of the type of score.
-     * @param amount is the amount of points the player gets.
+     * 
+     * @param amount    is the amount of points the player gets.
      * @param scoreType determines the score multiplier.
      */
     public void addScore(int amount, TerrainType scoreType) {
@@ -43,6 +49,7 @@ public class Player {
 
     /**
      * Getter for the amount of free meeples.
+     * 
      * @return the amount of free meeples.
      */
     public int getFreeMeeples() {
@@ -51,6 +58,7 @@ public class Player {
 
     /**
      * Grants access to a meeple.
+     * 
      * @return the meeple.
      */
     public Meeple getMeeple() {
@@ -63,6 +71,7 @@ public class Player {
 
     /**
      * Getter for number of the player.
+     * 
      * @return the player number.
      */
     public int getNumber() {
@@ -71,6 +80,7 @@ public class Player {
 
     /**
      * Getter for the score of the player.
+     * 
      * @return the score
      */
     public int getScore() {
@@ -79,6 +89,7 @@ public class Player {
 
     /**
      * Getter for a specific terrain score.
+     * 
      * @param scoreType is the type of the specific terrain score.
      * @return the specific score.
      */
@@ -91,6 +102,7 @@ public class Player {
 
     /**
      * Checks whether the player can still place Meeples.
+     * 
      * @return true if he has at least one free Meeple.
      */
     public boolean hasFreeMeeples() {
@@ -98,7 +110,8 @@ public class Player {
     }
 
     /**
-     * Returns a meeple after its job is down. Allows the player to place another meeple.
+     * Returns a meeple after its job is down. Allows the player to place another
+     * meeple.
      */
     public void returnMeeple() {
         freeMeeples++;
@@ -106,6 +119,7 @@ public class Player {
 
     /**
      * Convenience method for {@link GameSettings#getPlayerName(int)}.
+     * 
      * @return the name of this player.
      */
     public String getName() {
@@ -114,6 +128,7 @@ public class Player {
 
     /**
      * Convenience method for {@link GameSettings#getPlayerColor(int)}.
+     * 
      * @return the {@link PlayerColor} of this player.
      */
     public PlayerColor getColor() {

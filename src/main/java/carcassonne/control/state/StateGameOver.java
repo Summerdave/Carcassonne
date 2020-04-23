@@ -1,6 +1,7 @@
 package carcassonne.control.state;
 
 import carcassonne.control.MainController;
+import carcassonne.model.grid.CoordinatePair;
 import carcassonne.model.grid.GridDirection;
 import carcassonne.model.grid.GridPattern;
 import carcassonne.view.GameMessage;
@@ -72,7 +73,7 @@ public class StateGameOver extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public boolean placeTile(int x, int y) {
+    public boolean placeTile(final CoordinatePair position) {
         return false;
     }
 

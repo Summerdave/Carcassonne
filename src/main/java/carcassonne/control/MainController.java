@@ -1,13 +1,16 @@
 package carcassonne.control;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import carcassonne.client.Client;
 import carcassonne.control.state.AbstractControllerState;
 import carcassonne.control.state.StateGameOver;
 import carcassonne.control.state.StateIdle;
 import carcassonne.control.state.StateManning;
 import carcassonne.control.state.StatePlacing;
+import carcassonne.control.state.StateWaiting;
 import carcassonne.model.Meeple;
 import carcassonne.model.Player;
 import carcassonne.model.Round;
@@ -45,6 +48,8 @@ public class MainController {
     private Map<Class<? extends AbstractControllerState>, AbstractControllerState> stateMap;
     private AbstractControllerState currentState;
     private GameSettings settings;
+    private final Client client;
+    private final Subscriber subscriber;
 
     /**
      * Basic constructor. Creates the view and the model of the game.
@@ -64,7 +69,14 @@ public class MainController {
         registerState(new StateManning(this, rotationGUI, placementGUI, mainGUI));
         registerState(new StatePlacing(this, rotationGUI, placementGUI, mainGUI));
         registerState(new StateGameOver(this, rotationGUI, placementGUI, mainGUI));
-
+        registerState(new StateWaiting(this, rotationGUI, placementGUI, mainGUI));
+        this.subscriber = new Subscriber(this);
+        this.client = new Client(GameSettings.getServer(), this.subscriber);
+        try {
+            client.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -136,8 +148,8 @@ public class MainController {
      * @param x is the x coordinate.
      * @param y is the y coordinate.
      */
-    public boolean requestTilePlacement(int x, int y) {
-        return currentState.placeTile(x, y);
+    public boolean requestTilePlacement(final CoordinatePair position) {
+        return currentState.placeTile(position);
     }
 
     /**
@@ -283,6 +295,14 @@ public class MainController {
             return newGrid;
         }
         return oldGrid;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setOwnPlayer(int playerIndex) {
+        stateMap.values().forEach(s -> s.setOwnPlayer(playerIndex));
     }
 
 }

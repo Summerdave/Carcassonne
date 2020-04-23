@@ -31,6 +31,12 @@ public class GameSettings {
     private static final String MEEPLE_PATH = "src/main/ressources/meeple/meeple_";
     private static final String PNG = ".png";
     private static final String TEMPLATE = "_template";
+    public static final int SERVER_PORT = 44214;
+    public static final int SERVER_QUEUE_SIZE = 100;
+    public static final int SERVER_CORE_POOL_SIZE = 4;
+    public static final int SERVER_MAX_POOL_SIZE = 10;
+    public static final GameMode GAME_MODE = GameMode.NETWORK;
+    public static final long RETRY_TIME = 1000;
     private final List<Notifiable> changeListeners;
     private boolean chaosMode;
     private int amountOfPlayers;
@@ -152,5 +158,9 @@ public class GameSettings {
      */
     public static String getMeeplePath(TerrainType type, boolean isTemplate) {
         return MEEPLE_PATH + type.toString().toLowerCase() + (isTemplate ? TEMPLATE : EMPTY) + PNG;
+    }
+
+    public static String getServer() {
+        return "localhost";
     }
 }

@@ -14,6 +14,7 @@ import javax.swing.OverlayLayout;
 
 import carcassonne.control.MainController;
 import carcassonne.model.Player;
+import carcassonne.model.grid.CoordinatePair;
 import carcassonne.model.grid.GridDirection;
 import carcassonne.model.tile.Tile;
 import carcassonne.model.tile.TileType;
@@ -81,7 +82,7 @@ public class TileLabel {
              */
             @Override
             public void mouseClicked(MouseEvent e) {
-                controller.requestTilePlacement(x, y);
+                controller.requestTilePlacement(CoordinatePair.of(x, y));
             }
 
             @Override

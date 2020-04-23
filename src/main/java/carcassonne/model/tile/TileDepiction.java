@@ -3,6 +3,7 @@ package carcassonne.model.tile;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -13,23 +14,34 @@ import carcassonne.view.GameMessage;
 import carcassonne.view.PaintShop;
 
 /**
- * This class manages the graphical representation of a {@link Tile}. Additionally, it stores the rotation state of the
- * graphical representation.
+ * This class manages the graphical representation of a {@link Tile}.
+ * Additionally, it stores the rotation state of the graphical representation.
+ * 
  * @author Timur Saglam
  */
-public class TileDepiction {
+public class TileDepiction implements Serializable {
+
     private static final int IMAGES_PER_TILE = 4;
 
-    private final ArrayList<ImageIcon> images;
-    private final PaintShop paintShop;
+    private static final long serialVersionUID = -2726243627442091773L;
+    private transient final ArrayList<ImageIcon> images;
+    private transient final PaintShop paintShop;
     private int rotation;
 
-    /**
-     * Creates the tile depiction, which includes the representation of the tile in every rotation.
-     * @param tileType is the type of the tile, determines the image.
-     * @param hasEmblem determines whether the tile representation includes an emblem.
-     */
     public TileDepiction(TileType tileType, boolean hasEmblem) {
+        this(tileType, hasEmblem, 0);
+    }
+
+    /**
+     * Creates the tile depiction, which includes the representation of the tile in
+     * every rotation.
+     * 
+     * @param tileType  is the type of the tile, determines the image.
+     * @param hasEmblem determines whether the tile representation includes an
+     *                  emblem.
+     */
+    public TileDepiction(TileType tileType, boolean hasEmblem, final int rotation) {
+        this.rotation = rotation;
         images = new ArrayList<>(IMAGES_PER_TILE); // create image array.
         paintShop = new PaintShop();
         for (int index = 0; index < IMAGES_PER_TILE; index++) { // for every image
@@ -44,6 +56,7 @@ public class TileDepiction {
 
     /**
      * Returns the current depiction according to the rotation.
+     * 
      * @return the {@link ImageIcon} which is the current depiction.
      */
     public ImageIcon getCurrentDepiction() {
@@ -51,14 +64,16 @@ public class TileDepiction {
     }
 
     /**
-     * Updates the tile depiction to represent the rotated depiction (90 degree to the left).
+     * Updates the tile depiction to represent the rotated depiction (90 degree to
+     * the left).
      */
     public void rotateLeft() {
         rotation = rotation <= 0 ? 3 : rotation - 1; // update rotation indicator
     }
 
     /**
-     * Updates the tile depiction to represent the rotated depiction (90 degree to the right).
+     * Updates the tile depiction to represent the rotated depiction (90 degree to
+     * the right).
      */
     public void rotateRight() {
         rotation = rotation >= 3 ? 0 : rotation + 1; // update rotation indicator
@@ -73,5 +88,9 @@ public class TileDepiction {
             exception.printStackTrace();
             GameMessage.showError("ERROR: Could not load image loacted at " + imagePath);
         }
+    }
+
+    public int getRotation() {
+        return rotation;
     }
 }

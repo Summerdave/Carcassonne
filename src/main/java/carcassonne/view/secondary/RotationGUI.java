@@ -14,7 +14,9 @@ import carcassonne.model.tile.TileType;
 import carcassonne.view.main.MainGUI;
 
 /**
- * GUI class for the tile rotation. It lets the user look at the tile to place and rotate it both right and left.
+ * GUI class for the tile rotation. It lets the user look at the tile to place
+ * and rotate it both right and left.
+ * 
  * @author Timur Saglam
  */
 public class RotationGUI extends SecondaryGUI {
@@ -26,8 +28,9 @@ public class RotationGUI extends SecondaryGUI {
 
     /**
      * Simple constructor which uses the constructor of the <code>SmallGUI</code>.
+     * 
      * @param controller is the game controller.
-     * @param ui is the main GUI.
+     * @param ui         is the main GUI.
      */
     public RotationGUI(MainController controller, MainGUI ui) {
         super(controller, ui);
@@ -86,8 +89,8 @@ public class RotationGUI extends SecondaryGUI {
     }
 
     /**
-     * Primitive operation for the template method <code>setTile()</code>. Uses the tile to update the GUI content according
-     * to the tiles properties.
+     * Primitive operation for the template method <code>setTile()</code>. Uses the
+     * tile to update the GUI content according to the tiles properties.
      */
     @Override
     protected void updateGUI() {

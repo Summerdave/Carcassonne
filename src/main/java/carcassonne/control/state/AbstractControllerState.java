@@ -1,11 +1,17 @@
 package carcassonne.control.state;
 
 import carcassonne.control.MainController;
+import carcassonne.model.Meeple;
 import carcassonne.model.Player;
 import carcassonne.model.Round;
+import carcassonne.model.grid.CoordinatePair;
 import carcassonne.model.grid.Grid;
 import carcassonne.model.grid.GridDirection;
+import carcassonne.model.grid.GridPattern;
 import carcassonne.model.grid.GridSpot;
+import carcassonne.model.tile.Tile;
+import carcassonne.model.tile.TileStack;
+import carcassonne.settings.GameMode;
 import carcassonne.settings.GameSettings;
 import carcassonne.view.main.MainGUI;
 import carcassonne.view.menubar.Scoreboard;
@@ -26,6 +32,7 @@ public abstract class AbstractControllerState {
     protected Grid grid;
     protected Scoreboard scoreboard;
     protected MainGUI mainGUI;
+    private int ownPlayer = -1;
 
     /**
      * Constructor of the abstract state, sets the controller from the parameter,
@@ -74,13 +81,63 @@ public abstract class AbstractControllerState {
      */
     public abstract void placeMeeple(GridDirection position);
 
+    public void updateMeeplePlaced(Tile tile, Player player, GridDirection position) {
+        mainGUI.getBoard().resetMeeplePreview(tile);
+        if (position != null) {
+            tile.placeMeeple(player, position);
+            mainGUI.getBoard().setMeeple(tile, position, player);
+        }
+        updateScores();
+        processGridPatterns();
+        startNextTurn();
+    }
+
+    // gives the players the points they earned.
+    protected void processGridPatterns() {
+        Tile tile = round.getCurrentTile();
+        for (GridPattern pattern : grid.getModifiedPatterns(tile.getGridSpot())) {
+            if (pattern.isComplete()) {
+                for (Meeple meeple : pattern.getMeepleList()) {
+                    mainGUI.getBoard().removeMeeple(meeple);
+                }
+                pattern.disburse();
+                updateScores();
+            }
+        }
+    }
+
+    // starts the next turn and changes the state to state placing.
+    public void startNextTurn() {
+        if (round.isOver()) {
+            changeState(StateGameOver.class);
+        } else {
+            round.nextTurn();
+            mainGUI.getBoard().setCurrentPlayer(round.getActivePlayer());
+            final int ownIndex = getOwnPlayer();
+            final int currentIndex = round.getActivePlayer().getNumber();
+            if (GameSettings.GAME_MODE == GameMode.LOCAL || currentIndex == ownIndex) {
+                changeState(StatePlacing.class);
+            } else {
+                changeState(StateWaiting.class);
+            }
+        }
+    }
+
     /**
      * Method for the view to call if a user places a tile.
      * 
-     * @param x is the x coordinate.
-     * @param y is the y coordinate.
      */
-    public abstract boolean placeTile(int x, int y);
+    public abstract boolean placeTile(CoordinatePair pair);
+
+    public void updateTilePlaced(final GridSpot spot) {
+        final int x = spot.getX();
+        final int y = spot.getY();
+        final Tile tile = spot.getTile();
+        mainGUI.getBoard().setTile(tile, x, y);
+        GridSpot newSpot = grid.getSpot(x, y);
+        highlightSurroundings(newSpot);
+        controller.alignGrid();
+    }
 
     /**
      * Method for the view to call if the user wants to skip a round.
@@ -103,7 +160,7 @@ public abstract class AbstractControllerState {
      * 
      * @param stateType is the type of the new state.
      */
-    protected void changeState(Class<? extends AbstractControllerState> stateType) {
+    public void changeState(Class<? extends AbstractControllerState> stateType) {
         exit();
         AbstractControllerState newState = controller.changeState(stateType);
         newState.entry();
@@ -125,10 +182,25 @@ public abstract class AbstractControllerState {
      * @param playerCount is the specific number of players.
      */
     protected void startNewRound(int playerCount) {
-        int gridWidth = GameSettings.BOARD_WIDTH;
-        int gridHeight = GameSettings.BOARD_HEIGHT;
+        if (GameSettings.GAME_MODE == GameMode.LOCAL) {
+            int gridWidth = GameSettings.BOARD_WIDTH;
+            int gridHeight = GameSettings.BOARD_HEIGHT;
+            startNewRoundWithParameters(playerCount, gridWidth, gridHeight, null);
+            changeState(StatePlacing.class);
+        } else {
+            controller.getClient().requestGameStart();
+        }
+    }
+
+    public synchronized void startNewRoundWithParameters(final int playerCount, final int gridWidth,
+            final int gridHeight, final TileStack stack) {
         Grid newGrid = new Grid(gridWidth, gridHeight);
-        Round newRound = new Round(playerCount, newGrid, controller.getProperties());
+        final Round newRound;
+        if (stack == null) {
+            newRound = new Round(playerCount, newGrid, controller.getProperties());
+        } else {
+            newRound = new Round(playerCount, newGrid, controller.getProperties(), stack);
+        }
         controller.updateStates(newRound, newGrid);
         updateScores();
         updateStackSize();
@@ -137,7 +209,6 @@ public abstract class AbstractControllerState {
         highlightSurroundings(spot);
         round.nextTurn(); // first tile is drawn, player one is active.
         mainGUI.getBoard().setCurrentPlayer(round.getActivePlayer());
-        changeState(StatePlacing.class);
     }
 
     /**
@@ -182,6 +253,26 @@ public abstract class AbstractControllerState {
 
     public Player getPlayer() {
         return round.getActivePlayer();
+    }
+
+    public void setOwnPlayer(int playerIndex) {
+        this.ownPlayer = playerIndex;
+    }
+
+    public int getOwnPlayer() {
+        return this.ownPlayer;
+    }
+
+    public Player getPlayer(final int i) {
+        return round.getPlayer(i);
+    }
+
+    public Tile getCurrentTile() {
+        return round.getCurrentTile();
+    }
+
+    public void skipCurrentTile() {
+        round.skipCurrentTile();
     }
 
 }

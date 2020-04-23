@@ -16,6 +16,7 @@ import carcassonne.view.main.MainGUI;
 
 /**
  * A GUI for the placement of Meeples on the Tile that was placed previously.
+ * 
  * @author Timur Saglam
  */
 public class PlacementGUI extends SecondaryGUI {
@@ -26,8 +27,9 @@ public class PlacementGUI extends SecondaryGUI {
 
     /**
      * Simple constructor which uses the constructor of the <code>SmallGUI</code>.
+     * 
      * @param controller is the game controller.
-     * @param ui is the main GUI.
+     * @param ui         is the main GUI.
      */
     public PlacementGUI(MainController controller, MainGUI ui) {
         super(controller, ui);
@@ -44,7 +46,8 @@ public class PlacementGUI extends SecondaryGUI {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 button[x][y] = new PlacementButton(controller, x, y);
-                button[x][y].setToolTipText("Place Meeple on the " + GridDirection.values2D()[x][y].toReadableString() + " of the tile.");
+                button[x][y].setToolTipText(
+                        "Place Meeple on the " + GridDirection.values2D()[x][y].toReadableString() + " of the tile.");
                 constraints.gridx = x;
                 constraints.gridy = y + 1;
                 panel.add(button[x][y], constraints);
@@ -67,8 +70,8 @@ public class PlacementGUI extends SecondaryGUI {
     }
 
     /**
-     * Primitive operation for the template method <code>setTile()</code>. Uses the tile to update the GUI content according
-     * to the tiles properties.
+     * Primitive operation for the template method <code>setTile()</code>. Uses the
+     * tile to update the GUI content according to the tiles properties.
      */
     @Override
     protected void updateGUI() {

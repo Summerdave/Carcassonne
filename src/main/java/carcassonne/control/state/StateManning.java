@@ -1,9 +1,9 @@
 package carcassonne.control.state;
 
 import carcassonne.control.MainController;
-import carcassonne.model.Meeple;
 import carcassonne.model.Player;
 import carcassonne.model.grid.CastleAndRoadPattern;
+import carcassonne.model.grid.CoordinatePair;
 import carcassonne.model.grid.FieldsPattern;
 import carcassonne.model.grid.GridDirection;
 import carcassonne.model.grid.GridPattern;
@@ -85,13 +85,9 @@ public class StateManning extends AbstractControllerState {
     public void placeMeeple(GridDirection position) {
         Tile tile = round.getCurrentTile();
         Player player = round.getActivePlayer();
-        if (player.hasFreeMeeples() && isPlaceable(position)) {
-            mainGUI.getBoard().resetMeeplePreview(tile);
-            tile.placeMeeple(player, position);
-            mainGUI.getBoard().setMeeple(tile, position, player);
-            updateScores();
-            processGridPatterns();
-            startNextTurn();
+        if (position == null || (player.hasFreeMeeples() && isPlaceable(position))) {
+            controller.getClient().sendMeeplePlaced(tile.getGridSpot(), this.getPlayer(), position);
+            updateMeeplePlaced(tile, player, position);
         } else {
             GameMessage.showWarning("You can't place meeple directly on an occupied Castle or Road!");
         }
@@ -101,7 +97,7 @@ public class StateManning extends AbstractControllerState {
      * @see carcassonne.control.state.AbstractControllerState#placeTile()
      */
     @Override
-    public boolean placeTile(int x, int y) {
+    public boolean placeTile(final CoordinatePair position) {
         return false;
     }
 
@@ -110,34 +106,7 @@ public class StateManning extends AbstractControllerState {
      */
     @Override
     public void skip() {
-        mainGUI.getBoard().resetMeeplePreview(round.getCurrentTile());
-        processGridPatterns();
-        startNextTurn();
-    }
-
-    // gives the players the points they earned.
-    private void processGridPatterns() {
-        Tile tile = round.getCurrentTile();
-        for (GridPattern pattern : grid.getModifiedPatterns(tile.getGridSpot())) {
-            if (pattern.isComplete()) {
-                for (Meeple meeple : pattern.getMeepleList()) {
-                    mainGUI.getBoard().removeMeeple(meeple);
-                }
-                pattern.disburse();
-                updateScores();
-            }
-        }
-    }
-
-    // starts the next turn and changes the state to state placing.
-    private void startNextTurn() {
-        if (round.isOver()) {
-            changeState(StateGameOver.class);
-        } else {
-            round.nextTurn();
-            mainGUI.getBoard().setCurrentPlayer(round.getActivePlayer());
-            changeState(StatePlacing.class);
-        }
+        placeMeeple(null);
     }
 
     /**

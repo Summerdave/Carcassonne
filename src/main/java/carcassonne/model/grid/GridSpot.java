@@ -2,6 +2,7 @@ package carcassonne.model.grid;
 
 import static carcassonne.model.grid.GridDirection.MIDDLE;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,21 +13,24 @@ import carcassonne.model.tile.Tile;
 
 /**
  * The class represents a spot on the grid.
+ * 
  * @author Timur Saglam
  */
-public class GridSpot {
+public class GridSpot implements Serializable {
 
-    private final Grid grid;
-    private final Map<GridDirection, List<GridPattern>> tagMap; // maps tagged location to the patterns.
+    private static final long serialVersionUID = 3114367816477168688L;
+    private transient final Grid grid;
+    private transient final Map<GridDirection, List<GridPattern>> tagMap; // maps tagged location to the patterns.
     private Tile tile;
     private final int x;
     private final int y;
 
     /**
      * Creates a grid spot for a specific grid on a specific position.
+     * 
      * @param grid is the grid.
-     * @param x is the x coordinate of the position.
-     * @param y is the y coordinate of the position.
+     * @param x    is the x coordinate of the position.
+     * @param y    is the y coordinate of the position.
      */
     public GridSpot(Grid grid, int x, int y) {
         this.grid = grid;
@@ -40,6 +44,7 @@ public class GridSpot {
 
     /**
      * Creates list of all patterns on the spot.
+     * 
      * @return the list of patterns.
      */
     public List<GridPattern> createPatternList() {
@@ -69,6 +74,7 @@ public class GridSpot {
 
     /**
      * Forces to place a tile on the grid spot.
+     * 
      * @param tile is the tile to place.
      */
     public void forcePlacement(Tile tile) {
@@ -78,6 +84,7 @@ public class GridSpot {
 
     /**
      * Getter for the tile.
+     * 
      * @return the tile, or null if the grid spot has no tile.
      */
     public Tile getTile() {
@@ -86,6 +93,7 @@ public class GridSpot {
 
     /**
      * Getter for the x coordinate of the spot.
+     * 
      * @return the x coordinate.
      */
     public int getX() {
@@ -94,6 +102,7 @@ public class GridSpot {
 
     /**
      * Getter for the y coordinate of the spot.
+     * 
      * @return the y coordinate.
      */
     public int getY() {
@@ -101,8 +110,9 @@ public class GridSpot {
     }
 
     /**
-     * Method determines if tile recently was tagged by any grid pattern checks on a specific position or a position
-     * connected to the specific position.
+     * Method determines if tile recently was tagged by any grid pattern checks on a
+     * specific position or a position connected to the specific position.
+     * 
      * @param tilePosition is the specific position.
      * @return true if not tagged.
      */
@@ -116,10 +126,11 @@ public class GridSpot {
     }
 
     /**
-     * Method determines if tile recently was tagged by a specific grid pattern on a specific position or a position
-     * connected to the specific position.
+     * Method determines if tile recently was tagged by a specific grid pattern on a
+     * specific position or a position connected to the specific position.
+     * 
      * @param tilePosition is the specific position.
-     * @param taggedBy is the {@link GridPattern} that tagged this spot.
+     * @param taggedBy     is the {@link GridPattern} that tagged this spot.
      * @return true if tagged.
      */
     public Boolean hasTagConnectedTo(GridDirection tilePosition, GridPattern taggedBy) {
@@ -133,6 +144,7 @@ public class GridSpot {
 
     /**
      * Checks whether the grid spot is free.
+     * 
      * @return true if free
      */
     public boolean isFree() {
@@ -141,6 +153,7 @@ public class GridSpot {
 
     /**
      * Checks whether the grid spot is occupied.
+     * 
      * @return true if occupied
      */
     public boolean isOccupied() {
@@ -148,7 +161,9 @@ public class GridSpot {
     }
 
     /**
-     * Method determines if tile recently was tagged by grid pattern checks on a specific position or not.
+     * Method determines if tile recently was tagged by grid pattern checks on a
+     * specific position or not.
+     * 
      * @param tilePosition is the specific position.
      * @return true if it was not tagged.
      */
@@ -168,6 +183,7 @@ public class GridSpot {
 
     /**
      * Removes all the tags of a specific pattern from the tile.
+     * 
      * @param pattern is the specific grid pattern.
      */
     public void removeTagsFrom(GridPattern pattern) {
@@ -178,6 +194,7 @@ public class GridSpot {
 
     /**
      * Set tile on grid spot if possible.
+     * 
      * @param tile is the tile to set.
      * @return true if the tile could be placed.
      */
@@ -191,9 +208,11 @@ public class GridSpot {
     }
 
     /**
-     * tag the tile as recently checked by grid pattern checks for a specific direction.
+     * tag the tile as recently checked by grid pattern checks for a specific
+     * direction.
+     * 
      * @param direction is the tag direction.
-     * @param taggedBy is the {@link GridPattern} that tagged the spot.
+     * @param taggedBy  is the {@link GridPattern} that tagged the spot.
      */
     public void setTag(GridDirection direction, GridPattern taggedBy) {
         tagMap.get(direction).add(taggedBy);

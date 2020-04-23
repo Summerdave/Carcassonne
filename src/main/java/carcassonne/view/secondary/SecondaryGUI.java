@@ -16,6 +16,7 @@ import carcassonne.view.main.MainGUI;
 
 /**
  * Super class for all other smaller GUI beneath the main GUI.
+ * 
  * @author Timur Saglam
  */
 public abstract class SecondaryGUI extends JDialog implements Notifiable {
@@ -30,9 +31,11 @@ public abstract class SecondaryGUI extends JDialog implements Notifiable {
     protected Tile tile;
 
     /**
-     * Constructor for the class. Sets the controller of the GUI and the window title.
+     * Constructor for the class. Sets the controller of the GUI and the window
+     * title.
+     * 
      * @param controller sets the {@link MainController}.
-     * @param ui is the main graphical user interface.
+     * @param ui         is the main graphical user interface.
      */
     public SecondaryGUI(MainController controller, MainGUI ui) {
         super(ui);
@@ -44,20 +47,24 @@ public abstract class SecondaryGUI extends JDialog implements Notifiable {
     }
 
     /**
-     * Sets the tile of the GUI, updates the GUI and then makes it visible. Should be called to show the GUI. The method
-     * implements the template method pattern using the method <code>update()</code>.
-     * @param tile sets the tile.
+     * Sets the tile of the GUI, updates the GUI and then makes it visible. Should
+     * be called to show the GUI. The method implements the template method pattern
+     * using the method <code>update()</code>.
+     * 
+     * @param tile          sets the tile.
      * @param currentPlayer sets the color scheme according to the player.
      */
     public void setTile(Tile tile, Player currentPlayer) {
         if (tile == null) {
-            throw new IllegalArgumentException("Tried to set the tile of the " + getClass().getSimpleName() + " to null.");
+            throw new IllegalArgumentException(
+                    "Tried to set the tile of the " + getClass().getSimpleName() + " to null.");
         }
         this.tile = tile;
         this.currentPlayer = currentPlayer;
         panel.setBackground(currentPlayer.getColor().lightColor());
         updateGUI();
         setVisible(true);
+        refresh();
         toFront(); // sets the focus on the secondary GUI, removes need for double clicks
     }
 
@@ -87,11 +94,11 @@ public abstract class SecondaryGUI extends JDialog implements Notifiable {
     }
 
     /**
-     * Primitive operation for the template method <code>setTile()</code>. Uses the tile to update the GUI content according
-     * to the tiles properties.
+     * Primitive operation for the template method <code>setTile()</code>. Uses the
+     * tile to update the GUI content according to the tiles properties.
      */
     protected abstract void updateGUI();
-    
+
     public void refresh() {
         revalidate();
         super.repaint();

@@ -1,5 +1,6 @@
 package carcassonne.model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,35 +10,43 @@ import carcassonne.model.tile.TileStack;
 import carcassonne.settings.GameSettings;
 
 /**
- * An object of the round class simulates a game round. It does not actively control the game. It represents the round
- * and its information in an object.
+ * An object of the round class simulates a game round. It does not actively
+ * control the game. It represents the round and its information in an object.
+ * 
  * @author Timur Saglam
  */
-public class Round {
+public class Round implements Serializable {
 
+    private static final long serialVersionUID = -2811828533416012471L;
     private int activePlayerIndex;
     private Tile currentTile;
-    private Grid grid;
+    private transient Grid grid;
     private Player[] players;
     private final int playerCount;
     private final TileStack tileStack;
 
     /**
      * Simple constructor that creates the grid, the tile stack and the players.
+     * 
      * @param playerCount is the amount of players of the round.
-     * @param grid is the grid of the round.
-     * @param settings are the {@link GameSettings}.
+     * @param grid        is the grid of the round.
+     * @param settings    are the {@link GameSettings}.
      */
     public Round(int playerCount, Grid grid, GameSettings settings) {
+        this(playerCount, grid, settings, new TileStack(playerCount, !settings.isChaosMode()));
+    }
+
+    public Round(final int playerCount, final Grid grid, final GameSettings settings, final TileStack stack) {
         this.grid = grid;
         this.playerCount = playerCount;
-        tileStack = new TileStack(playerCount, !settings.isChaosMode()); // TODO (HIGH) remove from round?
+        tileStack = stack; // TODO (HIGH) remove from round?
         createPlayers(settings);
         currentTile = grid.getFoundation().getTile();
     }
 
     /**
      * Getter for the active players of the round.
+     * 
      * @return the players whose turn it is.
      */
     public Player getActivePlayer() {
@@ -46,6 +55,7 @@ public class Round {
 
     /**
      * Getter for the current tile, that was drawn from the tile stack.
+     * 
      * @return the current tile of the turn.
      */
     public Tile getCurrentTile() {
@@ -61,6 +71,7 @@ public class Round {
 
     /**
      * Getter for a specific players of the round.
+     * 
      * @param playerNumber is the number of the specific players.
      * @return returns the players.
      */
@@ -70,6 +81,7 @@ public class Round {
 
     /**
      * Getter for the amount of players in the round.
+     * 
      * @return the amount of players.
      */
     public int getPlayerCount() {
@@ -78,6 +90,7 @@ public class Round {
 
     /**
      * Returns amounts of tiles left on the stack.
+     * 
      * @return the stack size.
      */
     public int getStackSize() {
@@ -86,6 +99,7 @@ public class Round {
 
     /**
      * Method determines the winning players by the highest score.
+     * 
      * @return a list of names of the winning players.
      */
     public List<String> getWinningPlayers() {
@@ -104,8 +118,9 @@ public class Round {
     }
 
     /**
-     * Checks whether the game round is over. A game round is over if the grid is full or the stack of tiles is empty (no
-     * tiles left).
+     * Checks whether the game round is over. A game round is over if the grid is
+     * full or the stack of tiles is empty (no tiles left).
+     * 
      * @return true if the game is over.
      */
     public boolean isOver() {
@@ -119,14 +134,16 @@ public class Round {
         activePlayerIndex = ++activePlayerIndex % players.length;
         currentTile = tileStack.drawTile();
     }
-    
+
     public void setGrid(final Grid grid) {
         this.grid = grid;
     }
 
     /**
      * creates the players objects and sets the first players as active players.
-     * @param playerCount is the number of players in the range of [1, <code>GameOptions.MAXIMAL_PLAYERS]</code>.
+     * 
+     * @param playerCount is the number of players in the range of [1,
+     *                    <code>GameOptions.MAXIMAL_PLAYERS]</code>.
      */
     private void createPlayers(GameSettings settings) {
         if (playerCount <= 1 || playerCount > GameSettings.MAXIMAL_PLAYERS) {
@@ -138,4 +155,9 @@ public class Round {
         }
         activePlayerIndex = -1; // first player can only start after first tile is drawn via nextTurn()
     }
+
+    public TileStack getTileStack() {
+        return tileStack;
+    }
+
 }
