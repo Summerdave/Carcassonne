@@ -120,8 +120,7 @@ public class StateManning extends AbstractControllerState {
         } else {
             GameMessage.showMessage(
                     "You have no Meeples left. Regain Meeples by completing patterns to place Meepeles again.");
-            processGridPatterns();
-            startNextTurn();
+            placeMeeple(null);
         }
     }
 
