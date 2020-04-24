@@ -62,7 +62,7 @@ public class StateManning extends AbstractControllerState {
             } else { // castle or road:
                 pattern = new CastleAndRoadPattern(tile.getGridSpot(), position, terrain, grid);
             }
-            if (pattern.isNotOccupied() || pattern.isOccupiedBy(round.getActivePlayer())) {
+            if (pattern.isNotOccupied()) {
                 placeable = true; // can place meeple
             }
             pattern.removeTileTags();
