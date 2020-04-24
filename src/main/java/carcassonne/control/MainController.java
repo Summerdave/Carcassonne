@@ -24,6 +24,7 @@ import carcassonne.settings.GameSettings;
 import carcassonne.view.main.BoardGUI;
 import carcassonne.view.main.MainGUI;
 import carcassonne.view.main.TileLabel;
+import carcassonne.view.preview.PreviewGUI;
 import carcassonne.view.secondary.PlacementGUI;
 import carcassonne.view.secondary.RotationGUI;
 
@@ -45,6 +46,7 @@ public class MainController {
     private MainGUI mainGUI;
     private RotationGUI rotationGUI;
     private PlacementGUI placementGUI;
+    private PreviewGUI previewGUI;
     private Map<Class<? extends AbstractControllerState>, AbstractControllerState> stateMap;
     private AbstractControllerState currentState;
     private GameSettings settings;
@@ -58,6 +60,7 @@ public class MainController {
         settings = new GameSettings();
         rotationGUI = new RotationGUI(this, mainGUI);
         placementGUI = new PlacementGUI(this, mainGUI);
+        previewGUI = new PreviewGUI(mainGUI, new Tile(TileType.Null));
         stateMap = new HashMap<>();
         final BoardGUI boardGUI = createBoard();
         mainGUI = new MainGUI(this, boardGUI);
@@ -303,6 +306,11 @@ public class MainController {
 
     public void setOwnPlayer(int playerIndex) {
         stateMap.values().forEach(s -> s.setOwnPlayer(playerIndex));
+    }
+
+    public void updateTilePreview(Tile currentTile) {
+        previewGUI.setVisible(!currentState.isOwnTurn());
+        previewGUI.setTile(currentTile);
     }
 
 }

@@ -163,6 +163,7 @@ public abstract class AbstractControllerState {
     public void changeState(Class<? extends AbstractControllerState> stateType) {
         exit();
         AbstractControllerState newState = controller.changeState(stateType);
+        controller.updateTilePreview(round.getCurrentTile());
         newState.entry();
     }
 
@@ -273,6 +274,10 @@ public abstract class AbstractControllerState {
 
     public void skipCurrentTile() {
         round.skipCurrentTile();
+    }
+
+    public boolean isOwnTurn() {
+        return getOwnPlayer() == round.getActivePlayer().getNumber();
     }
 
 }
