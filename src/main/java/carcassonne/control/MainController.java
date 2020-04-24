@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import carcassonne.client.Client;
 import carcassonne.control.state.AbstractControllerState;
 import carcassonne.control.state.StateGameOver;
@@ -20,6 +22,7 @@ import carcassonne.model.grid.GridDirection;
 import carcassonne.model.grid.GridSpot;
 import carcassonne.model.tile.Tile;
 import carcassonne.model.tile.TileType;
+import carcassonne.settings.GameMode;
 import carcassonne.settings.GameSettings;
 import carcassonne.view.main.BoardGUI;
 import carcassonne.view.main.MainGUI;
@@ -137,6 +140,9 @@ public class MainController {
      * Requests to start a new round with a specific amount of players.
      */
     public void requestNewRound() {
+        if (GameSettings.GAME_MODE == GameMode.NETWORK && !client.isConnected()) {
+            return; // Not connected yet.
+        }
         currentState.newRound(settings.getAmountOfPlayers());
     }
 
@@ -313,6 +319,10 @@ public class MainController {
     public void updateTilePreview(Tile currentTile) {
         previewGUI.setVisible(!currentState.isOwnTurn());
         previewGUI.setTile(currentTile);
+    }
+
+    public void showNumPlayersDialog(int numPlayers) {
+        JOptionPane.showMessageDialog(mainGUI, "" + numPlayers + " Player(s) are online");
     }
 
 }

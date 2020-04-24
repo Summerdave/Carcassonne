@@ -158,4 +158,8 @@ public class Client {
         this.serverName = serverName;
     }
 
+    public boolean isConnected() {
+        return this.requestSocket.isConnected() && this.subscribeSocket.isConnected();
+    }
+
 }

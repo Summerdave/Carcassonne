@@ -98,7 +98,7 @@ public class Server {
                     }
                 }
             } else if (connectionType == ConnectionType.PUB_SUB) {
-                this.subscribers.add(new SubscribedClient(outputStream));
+                this.subscribers.add(new SubscribedClient(outputStream, this.subscribers.size()));
             }
         } catch (IOException e) {
             System.err.println("Error while reading from connection:");

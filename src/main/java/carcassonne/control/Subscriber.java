@@ -17,6 +17,7 @@ import carcassonne.server.GameStartMessage;
 import carcassonne.server.MeeplePlacedMessage;
 import carcassonne.server.PlacingSkippedMessage;
 import carcassonne.server.TilePlacedMessage;
+import carcassonne.server.WelcomeMessage;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Subscriber implements Consumer<BroadcastMessage> {
@@ -41,6 +42,9 @@ public class Subscriber implements Consumer<BroadcastMessage> {
             break;
         case PLACING_SKIPPED:
             processPlacingSkipped((PlacingSkippedMessage) message);
+            break;
+        case WELCOME:
+            processWelcome((WelcomeMessage) message);
             break;
         default:
             throw new NotImplementedException();
@@ -116,6 +120,10 @@ public class Subscriber implements Consumer<BroadcastMessage> {
             currentState.skipCurrentTile();
             currentState.startNextTurn();
         }
+    }
+
+    private void processWelcome(WelcomeMessage message) {
+        controller.showNumPlayersDialog(message.getNumPlayers());
     }
 
     private boolean isOwnOrigin(final BroadcastMessage message) {
