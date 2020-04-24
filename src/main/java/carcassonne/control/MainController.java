@@ -75,10 +75,12 @@ public class MainController {
         registerState(new StateWaiting(this, rotationGUI, placementGUI, mainGUI));
         this.subscriber = new Subscriber(this);
         this.client = new Client(GameSettings.getServer(), this.subscriber);
-        try {
-            client.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (GameSettings.AUTOCONNECT) {
+            try {
+                client.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

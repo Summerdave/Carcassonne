@@ -40,6 +40,7 @@ public class GameSettings {
     public static final int SERVER_MAX_POOL_SIZE = 10;
     public static final GameMode GAME_MODE = GameMode.NETWORK;
     public static final long RETRY_TIME = 1000;
+    public static final boolean AUTOCONNECT = false;
     private final List<Notifiable> changeListeners;
     private boolean chaosMode;
     private int amountOfPlayers;
@@ -171,4 +172,5 @@ public class GameSettings {
     public static String getServer() {
         return "localhost";
     }
+
 }

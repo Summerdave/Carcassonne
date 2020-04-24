@@ -3,6 +3,7 @@ package carcassonne.view.menubar;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -10,14 +11,17 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 
+import carcassonne.client.Client;
 import carcassonne.control.MainController;
 import carcassonne.settings.GameSettings;
 import carcassonne.settings.Notifiable;
 
 /**
  * The menu bar for the main GUI.
+ * 
  * @author Timur Saglam
  */
 public class MainMenuBar extends JMenuBar implements Notifiable {
@@ -46,6 +50,7 @@ public class MainMenuBar extends JMenuBar implements Notifiable {
 
     /**
      * Simple constructor creating the menu bar.
+     * 
      * @param scoreboard sets the scoreboard of the menu bar.
      * @param controller sets the connection to game the controller.
      */
@@ -63,6 +68,7 @@ public class MainMenuBar extends JMenuBar implements Notifiable {
 
     /**
      * Grants access to the scoreboard of the menu bar.
+     * 
      * @return the scoreboard.
      */
     public Scoreboard getScoreboard() {
@@ -114,7 +120,29 @@ public class MainMenuBar extends JMenuBar implements Notifiable {
             }
         });
         menuOptions.add(itemChaosMode);
+        JCheckBoxMenuItem serverSelect = new JCheckBoxMenuItem("Select Server");
+        serverSelect.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                showConnectDialog();
+            }
+        });
+        menuOptions.add(serverSelect);
         add(menuOptions);
+    }
+
+    private void showConnectDialog() {
+        final Client client = controller.getClient();
+        final String result = JOptionPane.showInputDialog("Select server", client.getServerName());
+        if (result != null) {
+            client.setServerName(result);
+            try {
+                client.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error connecting to server");
+            }
+        }
     }
 
     private void buildMenuPlayers() {

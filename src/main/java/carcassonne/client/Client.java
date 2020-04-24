@@ -20,7 +20,12 @@ import carcassonne.settings.GameSettings;
 public class Client {
     private final Socket requestSocket;
     private final Socket subscribeSocket;
-    private final String serverName;
+    private String serverName;
+
+    public String getServerName() {
+        return serverName;
+    }
+
     private int serverPort;
     private ObjectOutputStream requestStream;
     private ObjectInputStream responseStream;
@@ -147,6 +152,10 @@ public class Client {
         sendRequest(request);
         final Optional<Response> response = receiveResponse();
         return response.get();
+    }
+
+    public void setServerName(final String serverName) {
+        this.serverName = serverName;
     }
 
 }
