@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,12 +17,14 @@ import carcassonne.model.terrain.TerrainType;
 import carcassonne.settings.GameSettings;
 
 /**
- * This is the Carcassonne paint shop! It paints meeple images and tile highlights!
+ * This is the Carcassonne paint shop! It paints meeple images and tile
+ * highlights!
+ * 
  * @author Timur Saglam
  */
 public class PaintShop {
     private static final int MAXIMAL_ALPHA = 255;
-    
+
     private final Map<TerrainType, BufferedImage> imageMap;
     private final Map<TerrainType, BufferedImage> templateMap;
     private final BufferedImage highlightImage;
@@ -40,8 +42,9 @@ public class PaintShop {
 
     /**
      * Returns a custom colored meeple.
+     * 
      * @param meepleType is the type of the meeple.
-     * @param color is the custom color.
+     * @param color      is the custom color.
      * @return the colored meeple.
      */
     public ImageIcon getColoredMeeple(TerrainType meepleType, Color color) {
@@ -50,8 +53,9 @@ public class PaintShop {
 
     /**
      * Returns a custom colored meeple.
+     * 
      * @param meepleType is the type of the meeple.
-     * @param player is the {@link Player} whose color is used.
+     * @param player     is the {@link Player} whose color is used.
      * @return the colored meeple.
      */
     public ImageIcon getColoredMeeple(TerrainType meepleType, Player player) {
@@ -60,6 +64,7 @@ public class PaintShop {
 
     /**
      * Returns a custom colored highlight image.
+     * 
      * @param player determines the color of the highlight.
      * @return the highlighted tile.
      */
@@ -70,6 +75,7 @@ public class PaintShop {
 
     /**
      * Adds the emblem image to the top right of any tile image.
+     * 
      * @param originalTile is the original tile image without the emblem.
      * @return a copy of the image with an emblem.
      */
@@ -115,7 +121,8 @@ public class PaintShop {
         for (int x = 0; x < maskImage.getWidth(); x++) {
             for (int y = 0; y < maskImage.getHeight(); y++) {
                 Color maskPixel = new Color(maskImage.getRGB(x, y), true);
-                Color targetPixel = new Color(targetColor.getRed(), targetColor.getGreen(), targetColor.getBlue(), maskPixel.getAlpha());
+                Color targetPixel = new Color(targetColor.getRed(), targetColor.getGreen(), targetColor.getBlue(),
+                        maskPixel.getAlpha());
                 Color imagePixel = new Color(image.getRGB(x, y), true);
                 Color blendedColor = blend(imagePixel, targetPixel, true);
                 image.setRGB(x, y, blendedColor.getRGB());
@@ -125,11 +132,13 @@ public class PaintShop {
     }
 
     /**
-     * Blends to colors correctly based on alpha composition. Either blends both colors or applies the second on the first
-     * one.
-     * @param first is the first color to be applied.
-     * @param second is the second color to be applied.
-     * @param blendEqually applies the second on the first one of true, blends on alpha values if false.
+     * Blends to colors correctly based on alpha composition. Either blends both
+     * colors or applies the second on the first one.
+     * 
+     * @param first        is the first color to be applied.
+     * @param second       is the second color to be applied.
+     * @param blendEqually applies the second on the first one of true, blends on
+     *                     alpha values if false.
      * @return the blended color.
      */
     private Color blend(Color first, Color second, boolean blendEqually) {
@@ -152,10 +161,9 @@ public class PaintShop {
         return new BufferedImage(model, raster, isAlphaPremultiplied, null);
     }
 
-    private BufferedImage loadImage(String path) {
-        File file = new File(path);
+    private BufferedImage loadImage(URL path) {
         try {
-            return ImageIO.read(file);
+            return ImageIO.read(path);
         } catch (IOException exception) {
             exception.printStackTrace();
             GameMessage.showError("ERROR: Could not load image loacted at " + path);

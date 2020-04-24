@@ -1,9 +1,9 @@
 package carcassonne.model.tile;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -45,7 +45,8 @@ public class TileDepiction implements Serializable {
         images = new ArrayList<>(IMAGES_PER_TILE); // create image array.
         paintShop = new PaintShop();
         for (int index = 0; index < IMAGES_PER_TILE; index++) { // for every image
-            String imagePath = GameSettings.TILE_FOLDER_PATH + tileType.name() + index + GameSettings.TILE_FILE_TYPE;
+            final URL imagePath = GameSettings
+                    .getURL(GameSettings.TILE_FOLDER_PATH + tileType.name() + index + GameSettings.TILE_FILE_TYPE);
             if (hasEmblem) {
                 loadImageAndPaintEmblem(imagePath);
             } else {
@@ -79,10 +80,9 @@ public class TileDepiction implements Serializable {
         rotation = rotation >= 3 ? 0 : rotation + 1; // update rotation indicator
     }
 
-    private void loadImageAndPaintEmblem(String imagePath) {
-        File file = new File(imagePath);
+    private void loadImageAndPaintEmblem(URL imagePath) {
         try {
-            BufferedImage image = ImageIO.read(file);
+            BufferedImage image = ImageIO.read(imagePath);
             images.add(paintShop.addEmblem(image));
         } catch (IOException exception) {
             exception.printStackTrace();

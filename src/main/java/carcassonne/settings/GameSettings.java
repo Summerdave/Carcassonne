@@ -1,10 +1,12 @@
 package carcassonne.settings;
 
 import java.awt.Color;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import carcassonne.Carcassonne;
 import carcassonne.model.Player;
 import carcassonne.model.terrain.TerrainType;
 
@@ -19,16 +21,17 @@ public class GameSettings {
     public static final int BOARD_WIDTH = 12;
     public static final int BOARD_HEIGHT = 8;
     public static final String TILE_FILE_TYPE = ".png";
-    public static final String HIGHLIGHT_PATH = "src/main/ressources/highlight.png";
-    public static final String NULL_TILE_PATH = "src/main/ressources/tiles/Null0.png";
-    public static final String EMBLEM_PATH = "src/main/ressources/emblem.png";
-    public static final String TILE_FOLDER_PATH = "src/main/ressources/tiles/";
+    public static final String BASE_PATH = "/";
+    public static final URL HIGHLIGHT_PATH = getURL(BASE_PATH + "highlight.png");
+    public static final URL NULL_TILE_PATH = getURL(BASE_PATH + "tiles/Null0.png");
+    public static final URL EMBLEM_PATH = getURL(BASE_PATH + "emblem.png");
+    public static final String TILE_FOLDER_PATH = BASE_PATH + "tiles/";
 
     private static final PlayerColor[] DEFAULT_COLORS = { new PlayerColor(30, 26, 197), new PlayerColor(151, 4, 12),
             new PlayerColor(14, 119, 25), new PlayerColor(216, 124, 0), new PlayerColor(96, 0, 147) };
     private static final String[] DEFAULT_NAMES = { "ONE", "TWO", "THREE", "FOUR", "FIVE" };
     private static final String EMPTY = "";
-    private static final String MEEPLE_PATH = "src/main/ressources/meeple/meeple_";
+    private static final String MEEPLE_PATH = BASE_PATH + "meeple/meeple_";
     private static final String PNG = ".png";
     private static final String TEMPLATE = "_template";
     public static final int SERVER_PORT = 44214;
@@ -156,8 +159,13 @@ public class GameSettings {
      * @param isTemplate specifies whether the template image should be loaded.
      * @return the path as a String.
      */
-    public static String getMeeplePath(TerrainType type, boolean isTemplate) {
-        return MEEPLE_PATH + type.toString().toLowerCase() + (isTemplate ? TEMPLATE : EMPTY) + PNG;
+    public static URL getMeeplePath(TerrainType type, boolean isTemplate) {
+        final URL url = getURL(MEEPLE_PATH + type.toString().toLowerCase() + (isTemplate ? TEMPLATE : EMPTY) + PNG);
+        return url;
+    }
+
+    public static URL getURL(final String path) {
+        return Carcassonne.class.getResource(path);
     }
 
     public static String getServer() {
